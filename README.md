@@ -1,14 +1,13 @@
-# home-assistant-config
+# Home Assistant Config
 
-## Install Home Assistant
+[Home Assistant](https://www.home-assistant.io/) is an open source home automation that puts local control and privacy first. There are thousands of official and community supported integrations with a broad range of IoT devices.
 
-1. Install Home Assistant on Synology Virtual Machine Manager.
+## Source Config 
 
-## Onboarding
+This is an experimental project for Home Assistant automation using the official Home Assistant Core (docker) image.
 
-1. Launch Home Assistant and complete initial setup.
-2. Add Samba Share add-on
+## Getting Started
 
-## Configuration
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/mikejonestechno/home-assistant-config)
 
-1. Copy files to config folder and reload the configuration in Home Assistant
+> If you already have VS Code and Docker installed, you can click the badge above to get started. Clicking this link will cause VS Code to automatically install the Dev Containers extension if needed, clone the source code into a container volume, and spin up a dev container for use.
