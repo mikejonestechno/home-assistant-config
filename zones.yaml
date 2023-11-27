@@ -1,0 +1,8 @@
+# Zones created in UI are stored in .storage dir, not in a .yaml file
+
+# override the default core config 'home' zone with a smaller radius
+- name: Home
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  radius: 50
+  icon: mdi:home

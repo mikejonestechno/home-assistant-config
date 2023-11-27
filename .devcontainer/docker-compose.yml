@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:2023.11"
+    volumes:
+      - ..:/config
+    ports:
+      - "8123:8123"
+    environment:
+      - PUID=1000
+      - PGID=1000
+    restart: unless-stopped
+    # Official HA Containerized runs privileged. Potentially easier for cross-platform integration with host USB sticks, etc but generally considered security risk.
+    privileged: false
+    # user: "1000:1000"
