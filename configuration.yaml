@@ -1,6 +1,27 @@
+# The configuration.yaml is only used to bootstrap the system.
 
-# Loads default set of integrations. Do not remove.
+# Include the default Home Assistant integrations (sun, media, energy, backup, ...) 
+# https://www.home-assistant.io/integrations/default_config/
 default_config:
+
+# The 'core' configuration values will only be loaded from configuration.yaml and cannot be moved to another file.
+homeassistant:
+
+  # Location required to calculate the time the sun rises and sets.
+  # A default 'home' zone will be created using this config unless overridden by a zone.yaml.
+  # Name of the location where Home Assistant is running (useful if you have multiple homes!).
+  name: Home
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  time_zone: !secret home_time_zone
+  elevation: 50
+  country: !secret home_country
+  language: !secret home_langauge
+  currency: !secret home_currency
+  unit_system: metric
+
+  # Get everything else from integrations directory.
+  packages: !include_dir_named integrations
 
 # Load frontend themes from the themes folder
 frontend:
@@ -9,3 +30,4 @@ frontend:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+zone: !include zones.yaml
