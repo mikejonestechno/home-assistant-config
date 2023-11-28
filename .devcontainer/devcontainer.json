@@ -19,8 +19,8 @@
 		8123
 	],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	//"postCreateCommand": "",
+	// add jdk and nodejs for sonarlint extension
+	"postCreateCommand": "sudo apk add openjdk17 nodejs",
 
 	// Configure tool-specific properties.
 	"customizations": {
