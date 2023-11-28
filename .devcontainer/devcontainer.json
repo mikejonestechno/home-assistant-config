@@ -2,21 +2,25 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/alpine
 {
 	"name": "HomeAssistant",
-	//"image": "homeassistant/home-assistant:2023.11",
 	"dockerComposeFile": ["docker-compose.yml"],
 	"service": "homeassistant",
 	"workspaceFolder": "/config",
 	"shutdownAction": "stopCompose",
 		
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"username": "vscode"			
+		}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
 		8123
 	],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
+	// add jdk and nodejs for sonarlint extension
+	"postCreateCommand": "sudo apk add openjdk17 nodejs",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -27,7 +31,7 @@
 				"keesschollaart.vscode-home-assistant"
 			]
 		}
-	}
+	},
 
 	// Improve performance by mounting node_modules in Docker volume
 	// https://code.visualstudio.com/remote/advancedcontainers/improve-performance
@@ -36,5 +40,5 @@
 	//]
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	//"remoteUser": "1000:1000"
+	"remoteUser": "vscode"
 }

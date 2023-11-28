@@ -4,7 +4,7 @@
 
 ## Source Config 
 
-This is an experimental project for Home Assistant automation using the official Home Assistant Core (docker) image.
+This is an experimental project for Home Assistant automation using the official Home Assistant Core (docker) image with MySQL Maria DB and Mosquitto MQTT broker.
 
 ## Getting Started
 

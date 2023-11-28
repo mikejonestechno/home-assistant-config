@@ -1,5 +1,9 @@
 {
     "files.associations": {
         "*.yaml": "home-assistant"
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "mikejonestechno",
+        "projectKey": "mikejonestechno_home-assistant-config"
     }
 }
