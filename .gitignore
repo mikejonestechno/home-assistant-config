@@ -1,0 +1,17 @@
+# Default ignore all files
+*
+# ...except these files
+!*.yaml
+!*.md
+# ...even if they are in subfolders
+!*/
+
+# Always include these files
+!.devcontainer/**
+!.vscode/*
+!.gitignore
+
+# Always exclude these files
+.storage
+.cloud
+secrets.yaml
