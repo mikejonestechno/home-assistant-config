@@ -10,6 +10,7 @@
 !.devcontainer/**
 !.vscode/*
 !.gitignore
+!sonar-project.properties
 
 # Always exclude these files
 .storage
