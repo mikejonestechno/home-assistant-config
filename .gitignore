@@ -15,6 +15,9 @@
 !secrets-example.yaml
 !init.sh
 
+# Exclude HA sample blueprints
+blueprints/*/homeassistant/** 
+
 # Always exclude these files
 .storage
 .cloud
