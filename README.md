@@ -12,7 +12,9 @@ This is an experimental project for Home Assistant automation using the official
 
 > If you already have VS Code and Docker installed, you can click the badge above to get started. Clicking this link will cause VS Code to automatically install the Dev Containers extension if needed, clone the source code into a container volume, and spin up a dev container for use.
 
-1. Modify secrets.yaml to match your home location.
+1. Initially Home Assistant will activate 'safe mode' because the `secrets.yaml` is not defined in the github source project. 
+
+    The `init.sh` will create an example `secrets.yaml` file for you. Modify the properties in `secrets.yaml` to match your home location.
 
 2. Open http://localhost:8123/ in a browser and start the onboarding setup to initialize your admin account and create the local database.
 

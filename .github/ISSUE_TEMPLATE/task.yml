@@ -1,0 +1,21 @@
+name: 👷‍♂️ Task
+description: |
+  Create a task with BDD acceptance criteria. This is a good place to start a minor change or small task.
+labels: ["👷‍♂️ task"]
+body:
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Your Criteria
+      description: Write clear criteria in consistent format.
+      placeholder: Tell us what you want!
+      value: |
+        _GIVEN_ [some context]
+        _WHEN_ [some action is carried out]
+        _THEN_ [a particular set of observable consequences].
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Given-When-Then format is based on _[Introducing Behaviour Driven Development](https://dannorth.net/introducing-bdd/)_ by Dan North (2006). 

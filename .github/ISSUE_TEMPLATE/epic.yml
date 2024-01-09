@@ -1,0 +1,30 @@
+name: 🔮 Epic Proposition
+description: |
+  Create an epic value request in the form of a Value Proposition statement. This is a good place to start a discussion about a major new feature.
+labels: ["🔮 epic", "triage"]
+body:
+  - type: textarea
+    id: proposition
+    attributes:
+      label: Your Proposition
+      description: |
+        Write a clear summary in consistent format. The proposition clarifies why the new product or service is required. 
+        The alternative differentiation helps emphasise the value of why this proposition is needed.
+        The proposition should help clarify any assumptions or misunderstandings different stakeholders may about the value of the proposition.
+        Avoid using generic or vague statements that 'will be better', the proposition should include specific benefits.
+      placeholder: Tell us what you want!
+      value: |
+        _FOR_ [this group of people] 
+        _WHO_ [need or want x], 
+        _THE_ [new product/service name] is a [product/service category] 
+        _THAT_ [key benefit or unique selling point]. 
+
+        _UNLIKE_ [primary competitive alternative] 
+        _THAT_ [has this constraint or disadvantage]
+        _THE_ [new product/service name] WILL [statement of primary differentiation].
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Value Proposition format is based on _Crossing the Chasm_ by Geoff Moore. 

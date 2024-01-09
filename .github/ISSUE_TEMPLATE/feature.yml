@@ -1,0 +1,22 @@
+name: 🧪 Feature Hypothesis
+description: |
+  Create a new feature request in the form of a hypothesis statement. This is a good place to start a discussion about a new feature.
+labels: ["🧪 feature", "triage"]
+body:
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Your Hypothesis
+      description: Write a clear summary in consistent format.
+      placeholder: Tell us what you want!
+      value: |
+        _We believe_ [this outcome]
+        _will be achieved if_ [these users]
+        _attain_ [a benefit] _with_ [this solution/feature/idea].
+        _We will know we have succeeded when we see_ [this measurable outcome metric].
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Hypothesis Statement format is based on _[Lean UX](https://jeffgothelf.com/blog/the-hypothesis-prioritization-canvas/)_ by Jeff Gothelf and Josh Seiden (2019). 

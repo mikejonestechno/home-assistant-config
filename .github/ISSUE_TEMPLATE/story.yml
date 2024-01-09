@@ -1,0 +1,55 @@
+name: 📖 User Story
+description: |
+  Create a functional scernio in the form of a User Story. This is a good place to start a minor feature or change.
+labels: ["📖 story", "triage"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: Your Story
+      description: |
+        Write a clear scenario in consistent format. The Story should clearly define _why_ the user or role want or need something.
+        The 'I want' should not describe _what_ or _how_ a feature is implemented, it should describe an _abilty or outcome_.
+        The 'so that' should not re-phrase the outcome, it should describe the _why_ this outcome is desired or of _value_.
+      placeholder: Tell us a story why you want this change!
+      value: |
+        _AS A_ [role]
+        _I WANT_ [this ability or this outcome]
+        _SO THAT_ [some benefit or reduced pain].
+    validations:
+      required: true
+  - type: textarea
+    id: assumptions
+    attributes:
+      label: Assumptions
+      description: |
+        Write a list of assumptions, conditions, and exclusions that should be considered out of scope or covered by separate Stories.
+      placeholder: |
+        - Role assumption
+        - Conditional inclusion
+        - Out of scope exclusion
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: | 
+        Create a list of acceptance criteria. You can track these as Tasks later.
+        The acceptance criteria should measure or test that the feature has met the desired outcome or or acheived the expected result,
+        for example, each criteria could become a Behaviour Driven Development test case or have a measurable metric.
+        The acceptance criteria should not describe _how_ the feature is implemented, they should determine whether the _outcome is successful_.
+        Avoid multiple conditions or scenarios in a single story - split the story into multiple stories; 
+        however null hypothesis or inverse behaviour may be useful to ensure there are no negative impacts if the opposite actions are taken.
+        The Product Owner will accept this Story has been completed when:
+      placeholder: |
+        - [ ] The [exoected behaviour] does [this desired outcome].
+        - [ ] The [inverse behaviour] does not [do this undesired outcome].
+        - [ ] More than one [role] has [demonstrated] that [they have this desired benefit].
+        - [ ] The [metric] shows [this measurable benefit].
+  - type: markdown
+    attributes:
+      value: |
+        User Story format is based on _[User Stories Applied](https://www.mountaingoatsoftware.com/books/user-stories-applied)_ by Mike Cohn. 
+        The I.N.V.E.S.T. attributes of good stories are described in [Chapter 2](https://www.mountaingoatsoftware.com/uploads/articles/User-Stories-Applied-Mike-Cohn.pdf).
+        Acceptance Criteria examples based on experience by Mike Jones.
