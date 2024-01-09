@@ -11,7 +11,9 @@
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"username": "vscode"			
-		}
+		}/*, 'error HA os is unsupported distro version for node.js'
+		"ghcr.io/devcontainers/features/node:1": {} /*,
+		"ghcr.io/devcontainers/features/java:1": {}	*/	
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -20,7 +22,7 @@
 	],
 
 	// add jdk and nodejs for sonarlint extension
-	"postCreateCommand": "sudo apk add openjdk17 nodejs",
+	"postCreateCommand": "./init.sh && sudo apk add openjdk17 nodejs",
 
 	// Configure tool-specific properties.
 	"customizations": {
