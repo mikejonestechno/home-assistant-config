@@ -11,6 +11,8 @@
 !.vscode/*
 !.gitignore
 !sonar-project.properties
+!secrets-example.yaml
+!init.sh
 
 # Always exclude these files
 .storage
