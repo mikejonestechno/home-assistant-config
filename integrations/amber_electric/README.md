@@ -120,13 +120,13 @@ Maximum price (next four hours)
 
 ```yaml
 type: custom:mushroom-template-card
-primary: 'Min: {{ states(''sensor.amber_4hr_min'') }}  c/kWh'
-secondary: >
-  at {{ as_timestamp(state_attr('sensor.amber_4hr_min', 'time')) |
+primary: 'Max: {{ states(''sensor.amber_4hr_max'') }}  c/kWh'
+secondary: >-
+  at {{ as_timestamp(state_attr('sensor.amber_4hr_max', 'time')) |
   timestamp_custom("%-I:%M %p") }} 
 icon: mdi:transmission-tower
-entity: sensor.amber_4hr_min
-icon_color: '{{ state_attr(''sensor.amber_4hr_min'', ''color'') }} '
+entity: sensor.amber_forecast_4_hr_max
+icon_color: '{{ state_attr(''sensor.amber_4hr_max'', ''color'') }} '
 multiline_secondary: true
 tap_action:
   action: none
@@ -134,7 +134,7 @@ hold_action:
   action: none
 double_tap_action:
   action: none
-badge_icon: mdi:arrow-bottom-right
+badge_icon: mdi:arrow-top-right
 ```
 
 ### Apex Chart
