@@ -1,0 +1,116 @@
+template:
+- trigger:  
+  - platform: state
+    entity_id: sensor.amber_general_price
+    id: forecast
+    variables:
+      amber_4hr_min: "{{ state_attr('sensor.amber_forecast_price', 'amber_4hr_min') }}"   
+      amber_4hr_max: "{{ state_attr('sensor.amber_forecast_price', 'amber_4hr_max') }}"  
+      amber_12hr_min: "{{ state_attr('sensor.amber_forecast_price', 'amber_12hr_min') }}"   
+      amber_12hr_max: "{{ state_attr('sensor.amber_forecast_price', 'amber_12hr_max') }}"  
+      amber_current_price: "{{ states('sensor.amber_general_price') }}"
+      bands: >
+        {{ {
+          0.00:{"color":"#03a9f4", "label":"Very Low", "description":"Wow! It's really cheap and really green to use energy right now!"}, 
+          0.16:{"color":"#00e3a0", "label":"Low", "description":"It's cheap and green to use energy right now!"}, 
+          0.26:{"color":"#ffc624", "label":"Normal", "description":"Carry on with normal usage. Prices are around the average."},
+          0.36:{"color":"#fb8c0f", "label":"High", "description":"Energy is not cheap. This is a great time to delay any optional usage."},
+          0.46:{"color":"#dc2d20", "label":"Very High", "description":"Use less energy if you can. It's expensive right now."},
+          0.70:{"color":"#c920dc", "label":"Spike", "description":"Reduce all non-essential energy use! It's super expensive right now."},
+        } }}
+
+  sensor:
+
+  - name: "Amber - Current Price"
+    unique_id: "amber_current_price"
+    state: "{{ (amber_current_price * 100) | round }}"
+    state_class: "measurement"
+    unit_of_measurement: "c/kWh"        
+    icon: "mdi:transmission-tower"
+    # on HA startup this sensor must wait until the amber price is available
+    availability: "{{ is_number(states('sensor.amber_general_price')) }}"
+    attributes:
+      color: >
+        {% set threshold = bands | reject('gt', amber_current_price) | list | last %}
+        {{ bands[threshold].color }}
+      label: >
+        {% set threshold = bands | reject('gt', amber_current_price) | list | last %}
+        {{ bands[threshold].label }}
+      description: >
+        {% set threshold = bands | reject('gt', amber_current_price) | list | last %}
+        {{ bands[threshold].description }}
+      attribution: "amber_electric.yaml"
+
+  - name: "Amber - 4hr Min"
+    unique_id: "amber_4hr_min"
+    state: "{{ (amber_4hr_min * 100) | round }}"
+    state_class: "measurement"
+    unit_of_measurement: "c/kWh"        
+    icon: "mdi:transmission-tower"
+    # on HA startup this sensor must wait until the amber price is available
+    availability: "{{ is_number(states('sensor.amber_forecast_price')) }}"
+    attributes:
+      time: "{{ ( state_attr('sensor.amber_general_forecast', 'forecasts') | selectattr('per_kwh', 'eq', amber_4hr_min) | first ).start_time }}"
+      color: >
+        {% set threshold = bands | reject('gt', amber_4hr_min) | list | last %}
+        {{ bands[threshold].color }}
+      label: >
+        {% set threshold = bands | reject('gt', amber_4hr_min) | list | last %}
+        {{ bands[threshold].label }}
+      attribution: "amber_electric.yaml"
+
+  - name: "Amber - 4hr Max"
+    unique_id: "amber_4hr_max"
+    state: "{{ (amber_4hr_max * 100) | round }}"
+    state_class: "measurement"
+    unit_of_measurement: "c/kWh"        
+    icon: "mdi:transmission-tower"
+    # on HA startup this sensor must wait until the amber price is available
+    availability: "{{ is_number(states('sensor.amber_forecast_price')) }}"
+    attributes:
+      time: "{{ ( state_attr('sensor.amber_general_forecast', 'forecasts') | selectattr('per_kwh', 'eq', amber_4hr_max) | first ).start_time }}"
+      color: >
+        {% set threshold = bands | reject('gt', amber_4hr_max) | list | last %}
+        {{ bands[threshold].color }}
+      label: >
+        {% set threshold = bands | reject('gt', amber_4hr_max) | list | last %}
+        {{ bands[threshold].label }}
+      attribution: "amber_electric.yaml"
+
+
+
+  - name: "Amber - 12hr Min"
+    unique_id: "amber_12hr_min"
+    state: "{{ (amber_12hr_min * 100) | round }}"
+    state_class: "measurement"
+    unit_of_measurement: "c/kWh"        
+    icon: "mdi:transmission-tower"
+    # on HA startup this sensor must wait until the amber price is available
+    availability: "{{ is_number(states('sensor.amber_forecast_price')) }}"
+    attributes:
+      time: "{{ ( state_attr('sensor.amber_general_forecast', 'forecasts') | selectattr('per_kwh', 'eq', amber_12hr_min) | first ).start_time }}"
+      color: >
+        {% set threshold = bands | reject('gt', amber_12hr_min) | list | last %}
+        {{ bands[threshold].color }}
+      label: >
+        {% set threshold = bands | reject('gt', amber_12hr_min) | list | last %}
+        {{ bands[threshold].label }}
+      attribution: "amber_electric.yaml"
+
+  - name: "Amber - 12hr Max"
+    unique_id: "amber_12hr_max"
+    state: "{{ (amber_12hr_max * 100) | round }}"
+    state_class: "measurement"
+    unit_of_measurement: "c/kWh"        
+    icon: "mdi:transmission-tower"
+    # on HA startup this sensor must wait until the amber price is available
+    availability: "{{ is_number(states('sensor.amber_forecast_price')) }}"
+    attributes:
+      time: "{{ ( state_attr('sensor.amber_general_forecast', 'forecasts') | selectattr('per_kwh', 'eq', amber_12hr_max) | first ).start_time }}"
+      color: >
+        {% set threshold = bands | reject('gt', amber_12hr_max) | list | last %}
+        {{ bands[threshold].color }}
+      label: >
+        {% set threshold = bands | reject('gt', amber_12hr_max) | list | last %}
+        {{ bands[threshold].label }}
+      attribution: "amber_electric.yaml"      
