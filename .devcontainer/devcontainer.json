@@ -28,6 +28,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"github.vscode-pull-request-github",
 				"github.copilot",
 				"SonarSource.sonarlint-vscode",
 				"keesschollaart.vscode-home-assistant"
