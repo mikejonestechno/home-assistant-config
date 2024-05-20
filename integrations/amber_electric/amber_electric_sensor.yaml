@@ -1,0 +1,20 @@
+template:
+
+  - sensor:
+
+    - name: "Electricity Price"
+      unique_id: 3a178c8b-ebe4-4806-a5e7-5d0ba1f2d1cd
+      # State is current price in cents / kWh formatted as an int as fractional cents are unavailable
+      # ℹ The price includes GST but EXCLUDES network daily supply charge, monthly Amber subscription fee,
+      #   and other usage charges for network, carbon offset and price protection hedging.
+      state: "{{ ((states('sensor.amber_general_price') | float) * 100) | int }}"
+      state_class: "measurement"
+      unit_of_measurement: "c/kWh"        
+      icon: "mdi:transmission-tower"
+      availability: "{{ is_number(states('sensor.amber_general_price')) }}"
+      attributes:
+        attribution: "electricity_price_sensor.yaml"
+        band: >
+          {# import band attributes from /custom_templates file #}
+          {% from 'electricity_bands.jinja' import get_band %}
+          {{ get_band(((states('sensor.amber_general_price') | float) * 100) | int) }}
