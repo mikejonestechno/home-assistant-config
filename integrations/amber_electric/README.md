@@ -11,6 +11,10 @@ Even if you are not a customer with Amber Electric, the templates may provide so
 
 My integration adds custom sensors for min and max prices, with price band color and descriptions so that I can make dashboards themed like the official Amber app.
 
+The sensors use global variables and macros loaded from the `custom_templates` directory. These macros are loaded on Home Assistant start (or on call to the 'reload custom jinja2 templates` service).
+
+The dashboard uses the HACS modules 'mushroom' cards and 'apexcharts-card'.
+
 ### Gauge card
 
 ![](gauge_card.png)
