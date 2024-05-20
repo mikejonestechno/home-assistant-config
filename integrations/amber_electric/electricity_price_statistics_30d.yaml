@@ -1,0 +1,23 @@
+# 30 day statistics require 30 days of recorder data
+sensor:
+  - name: "Electricity Price 50th Percentile 30 days"
+    percentile: 50
+    unique_id: aacf3273-cf63-4b2e-bc0a-bead8e62d9bf
+    <<: &statistic
+      platform: statistics
+      entity_id: sensor.electricity_price
+      state_characteristic: percentile
+      max_age:
+        hours: 730
+  - <<: *statistic
+    name: "Electricity Price 1th Percentile 30 days"
+    percentile: 1
+    unique_id: 1e5adb9b-9f44-46d6-968d-6c7621dc5807
+  - <<: *statistic
+    name: "Electricity Price 10th Percentile 30 days"
+    percentile: 10
+    unique_id: e65a324a-50b9-452c-ad24-58ca0be49792
+  - <<: *statistic
+    name: "Electricity Price 99th Percentile 30 days"
+    percentile: 99                                
+    unique_id: b41b5915-15d3-4c6d-8608-4ff227a63328
