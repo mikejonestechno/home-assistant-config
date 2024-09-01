@@ -1,4 +1,4 @@
-{#  fixed price bands using simple scale
+{# fixed price bands using simple scale
      below 0 c negative
      0 to 10 c v low
     10 to 20 c low
@@ -9,7 +9,7 @@
 #}
 {% set band_prices_simple = [0, 10, 20, 30, 40, 50] %}
 
-{#  approximate price bands using statistic percentiles 
+{# approximate price bands using statistic percentiles 
     eg median band is centered around median price ~= 21 c
          below 0 c negative
           0 to 6 c v low  <- 1st percentile ~= 10 c
@@ -19,7 +19,7 @@
         36 to 66 c v high
         above 66 c spike <- 99th percentile ~= 50 c
 #}
-{% set band_prices = [0, 6, 16, 26, 36, 66] %}
+{% set band_prices = [0, 6, 16, 26, 36, 66, 9999] %}
 
 {% set bands = 
 [
@@ -64,45 +64,37 @@
     "description": "Reduce all non-essential energy use! It's super expensive right now.",
     "color": "#c920dc", 
     "colorRGB": [255,0,180]
+    },
+    {
+    "label": "Unknown", 
+    "description": "Electricity price unknown or unavailable, check Home Assistant logs.",
+    "color": "#c920dc", 
+    "colorRGB": [255,0,180]
     }
 ] 
 %}
 
+{# ALL macros return STRINGS not objects so ALWAYS format variables with default values eg | int(9999) #}
+
+{% macro get_band_index(price_in_cents) %}
+{{ band_prices | reject('gt', price_in_cents | int(9999) ) | list | count }}
+{% endmacro %}
+
 {% macro get_band(price_in_cents) %}
-{{ bands[band_prices | reject('gt', price_in_cents) | list | count] }}
+{{ bands[get_band_index(price_in_cents) | int(-1)] }}
 {% endmacro %}
 
-
-{% macro get_forecast_data(hours) %}
-    {% set forecasts = state_attr('sensor.amber_general_forecast', 'forecasts')[0:(hours * 2)] %}
-
-    {% set forecast = forecasts | min(attribute='per_kwh') %}
-    {% set price = (forecast.per_kwh * 100) | int %}
-    {% set band = bands[band_prices | reject('gt', price) | list | count]  %}
-    {% set min_forecast_values = {
-        'price': price,
-        'time': forecast.start_time,
-        'color': band.color, 
-        'label': band.label
-        }
-    %}
-
-    {% set forecast = forecasts | max(attribute='per_kwh') %}
-    {% set price = (forecast.per_kwh * 100) | int %}
-    {% set band = bands[band_prices | reject('gt', price) | list | count]  %}
-    {% set max_forecast_values = {
-        'price': price,
-        'time': forecast.start_time,
-        'color': band.color, 
-        'label': band.label
-        }
-    %}
-
-    {% set forecast_data = {
-        'min': min_forecast_values,
-        'max': max_forecast_values
-        }
-    %}
-    {{ forecast_data }}
+{# Creating template sensors using this.attributes.band_index work but log errors on HA restart #}
+{# So create separate macros to return individual values #}
+{% macro get_band_label(price_in_cents) %}
+{{ bands[get_band_index(price_in_cents) | int(-1)].label }}
 {% endmacro %}
-
+{% macro get_band_description(price_in_cents) %}
+{{ bands[get_band_index(price_in_cents) | int(-1)].description }}
+{% endmacro %}
+{% macro get_band_color(price_in_cents) %}
+{{ bands[get_band_index(price_in_cents) | int(-1)].color }}
+{% endmacro %}
+{% macro get_band_colorRGB(price_in_cents) %}
+{{ bands[get_band_index(price_in_cents) | int(-1)].colorRGB }}
+{% endmacro %}

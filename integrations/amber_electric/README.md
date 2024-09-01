@@ -1,9 +1,8 @@
 # Amber Electric Integration
 
-Disclaimer: I am a customer of [Amber Electric](https://mates.amber.com.au/FEH7HXNE), an Australian electricity provider that offers home users
-the wholesale national grid price (changes every 5 min) rather than 24/7 fixed plan rates (eg 32c/kWh).
+Disclaimer: I am a customer of [Amber Electric](https://mates.amber.com.au/FEH7HXNE), an Australian electricity provider that offers domestic energy users the wholesale national grid market price (that changes every 5 minutes) rather than 24/7 fixed plan rates (eg 32c/kWh).
 
-Even though I dont have solar or battery, Amber Electric enable me to shift my load to off peak periods and save money. I have a referral code for friends and family, no other financial incentive or promotions.
+Even though I dont have solar or battery, Amber Electric enables me to adapt or shift my energy use to take advantage of dynamic real-time energy prices and save significant money. I have a referral code for friends and family, no other financial incentive or promotions.
 
 Even if you are not a customer with Amber Electric, the templates may provide some guidelines for you to customize to your energy provider.
 
@@ -11,7 +10,7 @@ Even if you are not a customer with Amber Electric, the templates may provide so
 
 My integration adds custom sensors for min and max prices, with price band color and descriptions so that I can make dashboards themed like the official Amber app.
 
-The sensors use global variables and macros loaded from the `custom_templates` directory. These macros are loaded on Home Assistant start (or on call to the 'reload custom jinja2 templates` service).
+The sensors use global variables and macros loaded from the `custom_templates` directory. These macros are loaded on Home Assistant start (or on call to the `reload custom jinja2 templates` service).
 
 The dashboard uses the HACS modules 'mushroom' cards and 'apexcharts-card'.
 
@@ -27,25 +26,25 @@ It's good to know the current price, but will it get cheaper of more expensive l
 
 ### Apex Chart
 
-I use the advanced Apex Chart integration from HACS to plot actual historical and forecast prices. This helps me plan ahead and understand how likely the forecast prices will actually be based on historical trends.
+I previously used the advanced Apex Chart integration from HACS to plot actual historical and forecast prices on one chart.
 
 ![](apex_chart.png)
+
+My main dashboard for daily use is primarily focused on forecast prices only (I know they have high uncertainty). The historical price accuracy chart is displayed in a separate admin dashboard. 
 
 ## Installation
 
 Install the official Amber Electric integration using the Settings UI.
 
-Name the integration 'amber' so that entities are named sensor.amber_general_price, sensor.amber_general_forecast
+Name the integration 'amber' so that entities are named `sensor.amber_general_price`, `sensor.amber_general_forecast`
 
-My `amber_electric_sensor.yaml` will add custom template sensors since the official sensors are in $/kWh to be compatible 
-with the Energy dashboard cost estimates, but I prefer cents per kWh for normal dashboard cards and automations.
+The official Amber Electric sensors are in $/kWh to be compatible with the Energy dashboard cost estimates, but I prefer cents per kWh for normal dashboard cards and automations. My `electricity_price_sensor.yaml` will add a custom template sensor measured in c/kWh with price band label, description and colors.
 
-The official app modified the traffic light colors to reflect national energy price hikes in 2023, however I set 
-my own rate thresholds because in my history statistics the median price is around 21 cents, not 35 cents. I beleive anything over 26 cents / kWh should be considered normal, 35 cents is high.
+The official Amber Electric mobile app modified the traffic light colors to reflect the average national energy price hikes in 2023, however I set my own price band thresholds because I want to define a 'neutral' based median price, rather than a 'normal' based average price skewed by evening peak prices. In my history statistics the median price is around 21 cents, not 32 cents. I feel anything over 26 cents / kWh should be considered high, anything over 36 cents is very high.
 
 ### Gauge Card
 
-I use the 'gauge' card to show the current electricity price. The numbers here have to manually match the numbers in the price band yaml, the gauge card does not support template values.
+I use the 'gauge' card to show the current electricity price. The numbers here have to manually match the numbers in the `electricity_bands.jinja`, the gauge card does not support template values.
 
 ![](gauge_card.png)
 
@@ -66,7 +65,7 @@ segments:
     color: '#fb8c0f'
   - from: 36
     color: '#dc2d20'
-  - from: 46
+  - from: 66
     color: '#c920dc'
 name: Electricity Price c/kWh
 min: 0
@@ -82,34 +81,34 @@ I use the 'mushroom template' card from HACS that enables me to display conditio
 
 ``` yaml
 type: custom:mushroom-template-card
-primary: '{{ state_attr(entity,''band'').label }}: {{ states(entity, with_unit=true) }}'
-secondary: '{{ state_attr(entity,''band'').description }}'
+primary: '{{ state_attr(entity,''label'') }}: {{ states(entity, with_unit=true) }}'
+secondary: '{{ state_attr(entity,''description'') }}'
 icon: '{{ state_attr(entity,''icon'') }}'
 entity: sensor.electricity_price
-icon_color: '{{ state_attr(entity,''band'').color }}'
+icon_color: '{{ state_attr(entity,''color'') }}'
 layout: horizontal
 multiline_secondary: true
+tap_action:
+  action: more-info
 ```
 
 Minimum price (next four hours)
 
 ``` yaml
 type: custom:mushroom-template-card
-primary: |-
-  Min: {{ state_attr(entity,'4h').min.price | int }} {{ state_attr(entity,
-    'unit_of_measurement') }}
+primary: 'Min: {{ states(entity, with_unit=true) }}'
 secondary: >-
-  at {{ as_timestamp(state_attr(entity, '4h').min.time) |
-  timestamp_custom("%-I:%M %p") }} 
+  at {{ as_timestamp(state_attr(entity, 'forecast').start_time) |
+  timestamp_custom("%H:%M") }} 
 icon: mdi:clock
-entity: sensor.electricity_forecast
+entity: sensor.electricity_forecast_4_hours_min
 multiline_secondary: true
 hold_action:
   action: none
 double_tap_action:
   action: none
 fill_container: false
-icon_color: '{{ state_attr(entity,''4h'').min.color }}'
+icon_color: '{{ state_attr(entity,''color'') }}'
 tap_action:
   action: more-info
 badge_icon: mdi:arrow-down
@@ -119,23 +118,21 @@ Maximum price (next four hours)
 
 ```yaml
 type: custom:mushroom-template-card
-primary: >-
-  Max: {{ state_attr(entity,'4h').max.price | int }} {{ state_attr(entity,
-  'unit_of_measurement') }}
+primary: 'Max: {{ states(entity, with_unit=true) }}'
 secondary: >-
-  at {{ as_timestamp(state_attr(entity, '4h').max.time) |
-  timestamp_custom("%-I:%M %p") }} 
+  at {{ as_timestamp(state_attr(entity, 'forecast').start_time) |
+  timestamp_custom("%H:%M") }} 
 icon: mdi:clock
-entity: sensor.electricity_forecast
+entity: sensor.electricity_forecast_4_hours_max
 multiline_secondary: true
-tap_action:
-  action: none
 hold_action:
   action: none
 double_tap_action:
   action: none
-fill_container: true
-icon_color: '{{ state_attr(entity,''4h'').max.color }}'
+fill_container: false
+icon_color: '{{ state_attr(entity,''color'') }}'
+tap_action:
+  action: more-info
 badge_icon: mdi:arrow-up
 ```
 
