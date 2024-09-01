@@ -2,19 +2,77 @@ template:
 
   - sensor:
 
+    # State is current price in cents / kWh formatted as an int as fractional cents are unavailable
+    # ℹ The price includes GST but EXCLUDES network daily supply charge, monthly Amber subscription fee,
+    #   and other usage charges for network, carbon offset and price protection hedging.
+    # Separate nested attributes using this.attributes for compatibility with cards that dont support child attribute.dot.notation
+    # default() is required to prevent log errors when initial value is undefined eg during HA startup
+
+    # !! previously used state: "{{ this.attributes.price | default(0) | int }}" can result in zero price during HA startup, distorting statistics
+    # there is brief moment when sensor.amber_general_price is available but this.attributes are not
+    # therefore use state: "{{ states('sensor.amber_general_price') | float * 100 | int }}" to ensure state has correct value at startup
     - name: "Electricity Price"
       unique_id: 3a178c8b-ebe4-4806-a5e7-5d0ba1f2d1cd
-      # State is current price in cents / kWh formatted as an int as fractional cents are unavailable
-      # ℹ The price includes GST but EXCLUDES network daily supply charge, monthly Amber subscription fee,
-      #   and other usage charges for network, carbon offset and price protection hedging.
       state: "{{ ((states('sensor.amber_general_price') | float) * 100) | int }}"
-      state_class: "measurement"
-      unit_of_measurement: "c/kWh"        
-      icon: "mdi:transmission-tower"
       availability: "{{ is_number(states('sensor.amber_general_price')) }}"
+      <<: &electricity_price_sensor    
+        state_class: "measurement"
+        unit_of_measurement: "c/kWh"        
+        icon: "mdi:transmission-tower"
       attributes:
-        attribution: "electricity_price_sensor.yaml"
-        band: >
-          {# import band attributes from /custom_templates file #}
-          {% from 'electricity_bands.jinja' import get_band %}
-          {{ get_band(((states('sensor.amber_general_price') | float) * 100) | int) }}
+        price: "{{ this.state }}"
+        <<: &band_attributes
+          band: >
+            {% from 'electricity_bands.jinja' import get_band %}
+            {{ get_band(this.attributes.price | default('unknown')) }}
+          label: >
+            {{ (this.attributes.band | default({'label': 'unknown'})).label }}
+          description: >
+            {{ (this.attributes.band | default({'description': 'unknown'})).description }}
+          color: >
+            {{ (this.attributes.band | default({'color': 'unknown'})).color }}
+          colorRGB: >
+            {{ (this.attributes.band | default({'colorRGB': 'unknown'})).colorRGB }}        
+          attribution: "electricity_price_sensor.yaml"
+
+    - name: "Electricity Forecast 4 Hours Min"
+      unique_id: 4d74c554-5f44-4c2c-8ea3-9cc16919c69c
+      <<: &electricity_forecast_sensor
+        state: "{{ this.attributes.price | default(0) | int }}"
+        availability: "{{ is_number(states('sensor.amber_general_forecast')) }}"
+        <<: *electricity_price_sensor
+      attributes:
+        hours: "{{ 4 | int }}"
+        <<: &min_forecast
+          forecast: >
+            {% set forecasts = state_attr('sensor.amber_general_forecast', 'forecasts')[0:((this.attributes.hours | default(1) | int) * 2)] %}
+            {{ forecasts | min(attribute='per_kwh') }}
+          <<: &forecast_attributes
+            price: >
+              {{ (this.attributes.forecast | default({'per_kwh': 0})).per_kwh | float * 100 | int }}
+            <<: *band_attributes
+  
+    - name: "Electricity Forecast 12 Hours Min"
+      unique_id: 75d5ec1d-80a8-41dc-aa73-e54dfaf1bad4
+      <<: *electricity_forecast_sensor
+      attributes:
+        hours: "{{ 12 | int }}"  
+        <<: *min_forecast
+
+    - name: "Electricity Forecast 4 Hours Max"
+      unique_id: b9041056-7277-4ef7-a73f-de9b6b069d6f
+      <<: *electricity_forecast_sensor
+      attributes:
+        hours: "{{ 4 | int }}"
+        <<: &max_forecast
+          forecast: >
+            {% set forecasts = state_attr('sensor.amber_general_forecast', 'forecasts')[0:((this.attributes.hours | default(1) | int) * 2)] %}
+            {{ forecasts | max(attribute='per_kwh') }}
+          <<: *forecast_attributes
+
+    - name: "Electricity Forecast 12 Hours Max"
+      unique_id: d08291a6-a307-4af7-8f45-0df012e2603f
+      <<: *electricity_forecast_sensor
+      attributes:
+        hours: "{{ 12 | int }}"
+        <<: *max_forecast

@@ -7,6 +7,7 @@ sensor:
       platform: statistics
       entity_id: sensor.electricity_price
       state_characteristic: percentile
+      precision: 0
       max_age:
         hours: 730
   - <<: *statistic
@@ -21,3 +22,56 @@ sensor:
     name: "Electricity Price 99th Percentile 30 days"
     percentile: 99                                
     unique_id: b41b5915-15d3-4c6d-8608-4ff227a63328
+  - <<: *statistic
+    name: "Electricity Price 25th Percentile 30 days"
+    percentile: 25
+    unique_id: be6fe81d-8b9b-4f5c-b921-861ee43664d1
+
+# 7 day statistics
+  - name: "Electricity Price 50th Percentile 7 days"
+    percentile: 50
+    unique_id: 05210b89-a887-4cff-b3e7-5ce2bad9b6f7
+    <<: &statisticWeek
+      platform: statistics
+      entity_id: sensor.electricity_price
+      state_characteristic: percentile
+      precision: 0
+      max_age:
+        hours: 168
+  - <<: *statisticWeek
+    name: "Electricity Price 1th Percentile 7 days"
+    percentile: 1
+    unique_id: 22845550-c1b5-4694-bb5b-a0df91ec96e1
+  - <<: *statisticWeek
+    name: "Electricity Price 10th Percentile 7 days"
+    percentile: 10
+    unique_id: 1bbbf6e5-dc67-4e3c-9387-e37563418b9d
+  - <<: *statisticWeek
+    name: "Electricity Price 25th Percentile 7 days"
+    percentile: 25
+    unique_id: 802fbe74-1c2d-4517-8ac7-a1f6e773b9bc
+
+# 24 Hours statistics
+  - name: "Electricity Price 50th Percentile 24 Hours"
+    percentile: 50
+    unique_id: 7b3d75f1-9929-4147-852e-f3c264096ee6
+    <<: &statisticDay
+      platform: statistics
+      entity_id: sensor.electricity_price
+      state_characteristic: percentile
+      precision: 0
+      max_age:
+        hours: 24
+  - <<: *statisticDay
+    name: "Electricity Price 1th Percentile 24 Hours"
+    percentile: 1
+    unique_id: dcd1165a-80ee-43d8-8310-2fb8de85ce7b
+  - <<: *statisticDay
+    name: "Electricity Price 10th Percentile 24 Hours"
+    percentile: 10
+    unique_id: 679459a1-1df2-4f36-bed1-b45a421b6cf6
+  - <<: *statisticDay
+    name: "Electricity Price 25th Percentile 24 Hours"
+    percentile: 25
+    unique_id: a513a386-8323-4fe7-924d-e75f193f904c
+
